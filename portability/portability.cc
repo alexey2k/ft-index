@@ -131,6 +131,9 @@ PATENT RIGHTS GRANT:
 #include <portability/toku_atomic.h>
 #include <util/partitioned_counter.h>
 
+#define TRACEPOINT_DEFINE
+#include "ft_tracepoint.h"
+
 int
 toku_portability_init(void) {
     int r = toku_memory_startup();
@@ -252,6 +255,7 @@ toku_os_lock_file(const char *name) {
             errno = r;
         }
     }
+    tracepoint ( ft_tracepoint, message, 1 );
     return fd;
 }
 
@@ -320,6 +324,7 @@ toku_os_get_max_process_data_size(uint64_t *maxdata) {
 int
 toku_stat(const char *name, toku_struct_stat *buf) {
     int r = stat(name, buf);
+    tracepoint ( ft_tracepoint, message, 2 );
     return r;
 }
 

@@ -4,7 +4,8 @@ set(tools tokudb_dump tokuftdump tokuft_logprint tdb-recover ftverify ba_replay)
 foreach(tool ${tools})
   add_executable(${tool} ${tool})
   add_dependencies(${tool} install_tdb_h)
-  target_link_libraries(${tool} ${LIBTOKUDB}_static ft_static z lzma ${LIBTOKUPORTABILITY}_static  ${CMAKE_THREAD_LIBS_INIT} ${EXTRA_SYSTEM_LIBS})
+  target_link_libraries(${tool} ${LIBTOKUDB}_static ft_static z lzma ${LIBTOKUPORTABILITY}_static  
+                        ${CMAKE_THREAD_LIBS_INIT} ${EXTRA_SYSTEM_LIBS} ${LTTNG_UST_LIBRARY})
 
   # detect when we are being built as a subproject
   if (DEFINED MYSQL_PROJECT_NAME_DOCSTRING)

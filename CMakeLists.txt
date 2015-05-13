@@ -12,6 +12,12 @@ if (DEFINED MYSQL_PROJECT_NAME_DOCSTRING)
   add_definitions( -DMYSQL_TOKUDB_ENGINE=1 )
 endif ()
 
+#LTTNG
+if (NOT LTTNG_UST_INCLUDE_DIR)
+  find_path(LTTNG_UST_INCLUDE_DIR lttng/tracepoint.h)
+  find_library(LTTNG_UST_LIBRARY NAMES lttng-ust)
+endif()
+
 ## Versions of gcc >= 4.9.0 require special version of 'ar' and 'ranlib' for
 ## link-time optimizations to work properly.
 ##
@@ -71,6 +77,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR}/buildheader)
 ## default includes and libraries
 include_directories(SYSTEM
   /usr/local/include
+  ${LTTNG_UST_INCLUDE_DIRS}
   ${ZLIB_INCLUDE_DIRS}
   )
 

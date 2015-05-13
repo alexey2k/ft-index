@@ -11,11 +11,12 @@ set(tokuportability_srcs
   toku_path
   toku_pthread
   toku_time
+  toku_tp
   )
 
 add_library(${LIBTOKUPORTABILITY} SHARED ${tokuportability_srcs})
 target_link_libraries(${LIBTOKUPORTABILITY} LINK_PRIVATE ${LIBJEMALLOC})
-target_link_libraries(${LIBTOKUPORTABILITY} LINK_PUBLIC ${CMAKE_THREAD_LIBS_INIT} ${EXTRA_SYSTEM_LIBS})
+target_link_libraries(${LIBTOKUPORTABILITY} LINK_PUBLIC ${CMAKE_THREAD_LIBS_INIT} ${EXTRA_SYSTEM_LIBS} ${LTTNG_UST_LIBRARY})
 
 add_library(tokuportability_static_conv STATIC ${tokuportability_srcs})
 set_target_properties(tokuportability_static_conv PROPERTIES POSITION_INDEPENDENT_CODE ON)
