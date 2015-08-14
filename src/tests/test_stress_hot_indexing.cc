@@ -367,8 +367,8 @@ int
 test_main(int argc, char *const argv[]) {
     gid_count = 0;
     memset(hi_gid, 0, sizeof(hi_gid));
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&hi_lock, NULL);
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&fops_lock, NULL);
+    toku_mutex_init(toku_uninstrumented,&hi_lock, NULL);
+    toku_mutex_init(toku_uninstrumented,&fops_lock, NULL);
     hot_db = NULL;
     struct cli_args args = get_default_args();
     // let's make default checkpointing period really slow

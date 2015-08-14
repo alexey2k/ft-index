@@ -446,7 +446,7 @@ static void test (const char *directory, bool is_error) {
     toku_pthread_t consumer;
     struct consumer_thunk cthunk = {q, 0};
     {
-	int r = toku_pthread_create(&consumer, NULL, consumer_thread, (void*)&cthunk);
+	int r = toku_pthread_create(toku_uninstrumented, &consumer, NULL, consumer_thread, (void*)&cthunk);
 	assert(r==0);
     }
 

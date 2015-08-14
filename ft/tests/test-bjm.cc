@@ -126,7 +126,7 @@ static void bjm_test(void) {
     r = bjm_add_background_job(bjm);
     assert_zero(r);        
     toku_pthread_t tid;    
-    r = toku_pthread_create(&tid, NULL, finish_bjm, NULL); 
+    r = toku_pthread_create(toku_uninstrumented, &tid, NULL, finish_bjm, NULL); 
     assert_zero(r);
     usleep(2*1024*1024);
     // should return non-zero because tid is waiting 

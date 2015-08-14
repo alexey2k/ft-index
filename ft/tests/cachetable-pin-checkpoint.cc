@@ -438,16 +438,16 @@ cachetable_test (void) {
     run_test = true;
 
     for (int i = 0; i < NUM_MOVER_THREADS; i++) {
-        r = toku_pthread_create(&read_random_tid[i], NULL, read_random_numbers, NULL); 
+        r = toku_pthread_create(toku_uninstrumented, &read_random_tid[i], NULL, read_random_numbers, NULL); 
         assert_zero(r);
     }
     for (int i = 0; i < NUM_MOVER_THREADS; i++) {
-        r = toku_pthread_create(&move_tid[i], NULL, move_numbers, NULL); 
+        r = toku_pthread_create(toku_uninstrumented, &move_tid[i], NULL, move_numbers, NULL); 
         assert_zero(r);
     }
-    r = toku_pthread_create(&checkpoint_tid, NULL, checkpoints, NULL); 
+    r = toku_pthread_create(toku_uninstrumented, &checkpoint_tid, NULL, checkpoints, NULL); 
     assert_zero(r);    
-    r = toku_pthread_create(&time_tid, NULL, test_time, NULL); 
+    r = toku_pthread_create(toku_uninstrumented, &time_tid, NULL, test_time, NULL); 
     assert_zero(r);
 
     

@@ -377,39 +377,6 @@ int ft_loader_open_temp_file (FTLOADER bl, FIDX *file_idx)
     if (result) // debug hack
         return result;
     TOKU_FILE *f = NULL;
-    char *fname = mktemp(toku_strdup(bl->temp_file_template));    
-    if (fname == NULL)
-      result = get_error_errno();
-    else 
-    {
-       f = toku_os_fopen(fname, "r+", *tokudb_file_tmp_key);
-       if (f->file == NULL)
-         result = get_error_errno();
-       else
-         result = open_file_add(&bl->file_infos, f, fname, file_idx);
-    }
-    if (result != 0) {
-        if (f != NULL)
-            toku_os_fclose(f);  // don't check for error because we're already in an error case
-        if (fname != NULL)
-            toku_free(fname);
-    }
-    return result;
-}
-
-
-#if 0
-int ft_loader_open_temp_file_orig (FTLOADER bl, FIDX *file_idx)
-/* Effect: Open a temporary file in read-write mode.  Save enough information to close and delete the file later.
- * Return value: 0 on success, an error number otherwise.
- *  On error, *file_idx and *fnamep will be unmodified.
- *  The open file will be saved in bl->file_infos so that even if errors happen we can free them all.
- */
-{
-    int result = 0;
-    if (result) // debug hack
-        return result;
-    TOKU_FILE *f = NULL;
     int fd = -1;
     char *fname = toku_strdup(bl->temp_file_template);    
     if (fname == NULL)
@@ -419,7 +386,7 @@ int ft_loader_open_temp_file_orig (FTLOADER bl, FIDX *file_idx)
         if (fd < 0) { 
             result = get_error_errno();
         } else {
-            f = toku_os_fdopen(fd, "r+", fname);
+            f = toku_os_fdopen(fd, "r+", fname, *tokudb_file_tmp_key);
             if (f->file == NULL)
                 result = get_error_errno();
             else
@@ -438,7 +405,6 @@ int ft_loader_open_temp_file_orig (FTLOADER bl, FIDX *file_idx)
     }
     return result;
 }
-#endif
 
 
 void toku_ft_loader_internal_destroy (FTLOADER bl, bool is_error) {
@@ -773,7 +739,7 @@ TOKU_FILE *toku_bl_fidx2file (FTLOADER bl, FIDX i) {
 }
 
 static int bl_finish_compressed_write(TOKU_FILE *stream, struct wbuf *wb) {
-    int r;
+    int r=0;
     char *compressed_buf = NULL;
     const size_t data_size = wb->ndone;
     invariant(data_size > 0);

@@ -570,7 +570,7 @@ static void run_test (int iter) {
         if (verbose) printf("dying\n");
 #if 0
 	// separate thread will perform random acts on other dictionaries (not 0)
-	r = toku_pthread_create(&thread, 0, random_acts, (void *) dictionaries);
+	r = toku_pthread_create(toku_uninstrumented, &thread, 0, random_acts, (void *) dictionaries);
 	CKERR(r);
 	// this thead will scribble over dictionary 0 before crash to verify that
 	// post-checkpoint inserts are not in the database

@@ -139,7 +139,7 @@ test_db_open_aborts (void) {
         }
         toku_struct_stat statbuf;
         char filename[TOKU_PATH_MAX+1];
-        r = toku_stat(toku_path_join(filename, 2, TOKU_TEST_FILENAME, "foo.db"), &statbuf);
+        r = toku_stat(toku_path_join(filename, 2, TOKU_TEST_FILENAME, "foo.db"), &statbuf, toku_uninstrumented);
         assert(r!=0);
         assert(errno==ENOENT);
     }
@@ -206,7 +206,7 @@ test_db_put_aborts (void) {
         }
 	toku_struct_stat statbuf;
         char fullfile[TOKU_PATH_MAX+1];
-	r = toku_stat(toku_path_join(fullfile, 2, TOKU_TEST_FILENAME, filename), &statbuf);
+	r = toku_stat(toku_path_join(fullfile, 2, TOKU_TEST_FILENAME, filename), &statbuf, toku_uninstrumented);
 	assert(r==0);
         toku_free(filename);
     }

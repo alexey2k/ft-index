@@ -115,7 +115,7 @@ int main(void) {
     // run the test
     toku_pthread_t tid;
     int r;
-    r = toku_pthread_create(&tid, NULL, sm_test_f, NULL);
+    r = toku_pthread_create(toku_uninstrumented, &tid, NULL, sm_test_f, NULL);
     assert_zero(r);
     void *ret;
     r = toku_pthread_join(tid, &ret);

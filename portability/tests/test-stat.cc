@@ -99,7 +99,7 @@ PATENT RIGHTS GRANT:
 static void test_stat(const char *dirname, int result, int ex_errno) {
     int r;
     toku_struct_stat buf;
-    r = toku_stat(dirname, &buf);
+    r = toku_stat(dirname, &buf, toku_uninstrumented);
     //printf("stat %s %d %d\n", dirname, r, errno); fflush(stdout);
     assert(r==result);
     if (r!=0) assert(get_maybe_error_errno() == ex_errno);

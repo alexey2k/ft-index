@@ -170,7 +170,7 @@ static void run_test(DB_ENV *db_env, DB *db, int nthreads, uint64_t nrows, long 
     toku_pthread_t tids[nthreads];
     struct blocking_last_args a = { db_env, db, nrows, sleeptime };
     for (int i = 0; i < nthreads-1; i++) {
-        r = toku_pthread_create(&tids[i], NULL, blocking_last_thread, &a); assert(r == 0);
+        r = toku_pthread_create(toku_uninstrumented, &tids[i], NULL, blocking_last_thread, &a); assert(r == 0);
     }
     blocking_last(db_env, db, nrows, sleeptime);
     for (int i = 0; i < nthreads-1; i++) {

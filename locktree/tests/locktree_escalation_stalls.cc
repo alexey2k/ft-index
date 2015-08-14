@@ -237,7 +237,7 @@ int main(int argc, const char *argv[]) {
     // create the worker threads
     struct arg big_arg = { &mgr, lt_0, 1000 };
     pthread_t big_id;
-    r = toku_pthread_create(&big_id, nullptr, big_f, &big_arg);
+    r = toku_pthread_create(toku_uninstrumented, &big_id, nullptr, big_f, &big_arg);
     assert(r == 0);
 
     const int n_small = 7;
@@ -246,7 +246,7 @@ int main(int argc, const char *argv[]) {
 
     for (int i = 0; i < n_small; i++) {
         small_args[i] = { &mgr, lt_1, (TXNID)(2000+i), i };
-        r = toku_pthread_create(&small_ids[i], nullptr, small_f, &small_args[i]);
+        r = toku_pthread_create(toku_uninstrumented, &small_ids[i], nullptr, small_f, &small_args[i]);
         assert(r == 0);
     }
 

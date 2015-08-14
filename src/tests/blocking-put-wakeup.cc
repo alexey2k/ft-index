@@ -110,8 +110,8 @@ struct test_seq {
 
 static void test_seq_init(struct test_seq *seq) {
     seq->state = 0;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&seq->lock, NULL);
-    toku_cond_init(PFS_NOT_INSTRUMENTED,&seq->cv, NULL);
+    toku_mutex_init(toku_uninstrumented,&seq->lock, NULL);
+    toku_cond_init(toku_uninstrumented,&seq->cv, NULL);
 }
 
 static void test_seq_destroy(struct test_seq *seq) {
@@ -222,7 +222,7 @@ int test_main(int argc, char * const argv[]) {
     struct test_seq seq; ZERO_STRUCT(seq); test_seq_init(&seq);
     toku_pthread_t t_a_id;
     struct t_a_args t_a_args = { db_env, db, &seq };
-    r = toku_pthread_create(&t_a_id, NULL, t_a_thread, &t_a_args); assert(r == 0);
+    r = toku_pthread_create(toku_uninstrumented, &t_a_id, NULL, t_a_thread, &t_a_args); assert(r == 0);
     t_b(db_env, db, &seq);
     void *ret;
     r = toku_pthread_join(t_a_id, &ret); assert(r == 0);

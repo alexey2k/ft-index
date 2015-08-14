@@ -136,7 +136,7 @@ test_main (int argc __attribute__((__unused__)),
 	    char fname[TOKU_PATH_MAX+1];
             toku_path_join(fname, 2, TOKU_TEST_FILENAME, dirent->d_name);
 	    toku_struct_stat statbuf;
-	    r = toku_stat(fname, &statbuf);
+	    r = toku_stat(fname, &statbuf, toku_uninstrumented);
 	    assert(r==0);
 	    assert(statbuf.st_size<=LSIZE+10);
 	}

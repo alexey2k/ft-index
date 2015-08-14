@@ -137,7 +137,7 @@ test_groupcommit (int nthreads) {
     int whichthread[nthreads];
     for (i=0; i<nthreads; i++) {
 	whichthread[i]=i;
-	r=toku_pthread_create(&threads[i], 0, start_a_thread, &whichthread[i]);
+	r=toku_pthread_create(toku_uninstrumented, &threads[i], 0, start_a_thread, &whichthread[i]);
     }
     for (i=0; i<nthreads; i++) {
 	toku_pthread_join(threads[i], 0);

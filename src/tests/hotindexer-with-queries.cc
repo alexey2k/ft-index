@@ -166,7 +166,7 @@ static void query_only(DB *src)
     client_init();
 
     // start thread doing query
-    r = toku_pthread_create(client_thread, 0, client, (void *)src);  
+    r = toku_pthread_create(toku_uninstrumented, client_thread, 0, client, (void *)src);  
     CKERR(r);
 
     r = toku_pthread_join(*client_thread, &t0);     
@@ -202,7 +202,7 @@ static void test_indexer(DB *src, DB **dbs)
     CKERR(r);
 
     // start thread doing query
-    r = toku_pthread_create(client_thread, 0, client, (void *)src);  CKERR(r);
+    r = toku_pthread_create(toku_uninstrumented, client_thread, 0, client, (void *)src);  CKERR(r);
 
     struct timeval start, now;
     if ( verbose ) {

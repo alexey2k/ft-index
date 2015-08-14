@@ -182,7 +182,7 @@ int block_table::create_from_buffer(int fd,
     _copy_translation(&_current, &_checkpointed, TRANSLATION_CURRENT);
 
     // Determine the file size
-    int64_t file_size;
+    int64_t file_size=0;
     r = toku_os_get_file_size(fd, &file_size);
     lazy_assert_zero(r);
     invariant(file_size >= 0);

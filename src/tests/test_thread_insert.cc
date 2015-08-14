@@ -204,7 +204,7 @@ test_main(int argc, char *const argv[]) {
     if (verbose) printf("pid:%d\n", toku_os_getpid());
 
     for (i=1; i<nthreads; i++) {
-        r = toku_pthread_create(&work[i].tid, 0, do_inserts, &work[i]); assert(r == 0);
+        r = toku_pthread_create(toku_uninstrumented, &work[i].tid, 0, do_inserts, &work[i]); assert(r == 0);
     }
 
     work[0].do_exit = 0;

@@ -246,7 +246,7 @@ void do_threads (unsigned long long N, int do_nonlocal) {
                                               .finish    = 0}};
     int n_to_create = do_nonlocal ? 2 : 1;
     for (int i=0; i<n_to_create; i++) {
-	int r =  toku_pthread_create(&ths[i], 0, reader_thread, (void*)&rstates[i]);
+	int r =  toku_pthread_create(toku_uninstrumented, &ths[i], 0, reader_thread, (void*)&rstates[i]);
 	CKERR(r);
     }
     for (int i=0; i<n_to_create; i++) {

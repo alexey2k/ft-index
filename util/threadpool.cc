@@ -168,7 +168,8 @@ static void
 toku_thread_destroy(struct toku_thread *thread) {
     int r;
     void *ret;
-    r = toku_pthread_join(thread->tid, &ret); invariant(r == 0 && ret == thread);
+    r = toku_pthread_join(thread->tid, &ret); 
+    invariant(r == 0 && ret == thread);
     struct toku_thread_pool *pool = thread->pool;
     toku_thread_pool_lock(pool);
     toku_list_remove(&thread->free_link);

@@ -146,8 +146,8 @@ static void *startb (void *n) {
 static void test3681 (void) {
     setup();
     toku_pthread_t a,b;
-    { int r; r = toku_pthread_create(&a, NULL, starta, NULL); assert(r==0); }
-    { int r; r = toku_pthread_create(&b, NULL, startb, NULL); assert(r==0); }
+    { int r; r = toku_pthread_create(toku_uninstrumented, &a, NULL, starta, NULL); assert(r==0); }
+    { int r; r = toku_pthread_create(toku_uninstrumented, &b, NULL, startb, NULL); assert(r==0); }
     { int r; void *v; r = toku_pthread_join(a, &v);           assert(r==0); assert(v==NULL); }
     { int r; void *v; r = toku_pthread_join(b, &v);           assert(r==0); assert(v==NULL);  }
     finish();

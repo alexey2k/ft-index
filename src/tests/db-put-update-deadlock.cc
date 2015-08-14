@@ -183,7 +183,7 @@ static void update_deadlock(DB_ENV *db_env, DB *db, int do_txn, int nrows, int n
     for (int i = 0 ; i < ntxns; i++) {
         struct write_one_arg *XMALLOC(arg);
         *arg = (struct write_one_arg) { txns[i], db, (int) htonl((i + 1) % ntxns), 0};
-        r = toku_pthread_create(&tids[i], NULL, write_one_f, arg);
+        r = toku_pthread_create(toku_uninstrumented, &tids[i], NULL, write_one_f, arg);
     }
 #else
     // get read locks
@@ -196,7 +196,7 @@ static void update_deadlock(DB_ENV *db_env, DB *db, int do_txn, int nrows, int n
     for (int i = 0 ; i < ntxns; i++) {
         struct write_one_arg *XMALLOC(arg);
         *arg = (struct write_one_arg) { txns[i], db, (int) htonl(0), 0};
-        r = toku_pthread_create(&tids[i], NULL, write_one_f, arg);
+        r = toku_pthread_create(toku_uninstrumented, &tids[i], NULL, write_one_f, arg);
     }
 #endif
 

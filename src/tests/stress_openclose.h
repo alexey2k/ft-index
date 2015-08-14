@@ -303,7 +303,7 @@ stress_table(DB_ENV *env, DB **dbp, struct cli_args *cli_args) {
             .is_open = true
         };
         buckets[i] = bucket;
-        toku_mutex_init(PFS_NOT_INSTRUMENTED,&buckets[i].mutex, NULL);
+        toku_mutex_init(toku_uninstrumented,&buckets[i].mutex, NULL);
     }
     // run all of the query and update workers. they may randomly open
     // and close the dbs in each db_bucket to be some random dictionary,

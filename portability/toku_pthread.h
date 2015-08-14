@@ -98,7 +98,7 @@ PATENT RIGHTS GRANT:
 #include "toku_portability.h"
 #include "toku_assert.h"
 
-// TODO: some things moved toku_pfs.h, not necessarily the best place
+// TODO: some things moved toku_instrumentation.h, not necessarily the best place
 typedef pthread_attr_t toku_pthread_attr_t;
 typedef pthread_t toku_pthread_t;
 typedef pthread_mutex_t toku_pthread_mutex_t;
@@ -305,7 +305,7 @@ inline void toku_cond_init(
   toku_cond_t *cond,
   const pthread_condattr_t *attr)
 {
-  cond->psi_cond= toku_instr_cond_init(key, *cond);
+  toku_instr_cond_init(key, *cond);
   int r = pthread_cond_init(&cond->pcond, attr);
   assert_zero(r);
 }
@@ -417,7 +417,7 @@ inline void toku_pthread_rwlock_init(
   toku_pthread_rwlock_t *__restrict rwlock,
   const toku_pthread_rwlockattr_t *__restrict attr)
 {
-  rwlock->psi_rwlock= toku_instr_rwlock_init(key, *rwlock);
+  toku_instr_rwlock_init(key, *rwlock);
   int r = pthread_rwlock_init(&rwlock->rwlock, attr);
   assert_zero(r);
 }
@@ -491,7 +491,8 @@ inline void toku_pthread_rwlock_wrunlock(
 static inline void *
 toku_pthread_done(void* exit_value) {
     toku_instr_delete_current_thread();
-    return(exit_value);
+    pthread_exit(exit_value);
+//    return(exit_value);
 }
 
 static inline int 

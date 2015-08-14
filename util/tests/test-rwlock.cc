@@ -299,10 +299,10 @@ static void util_rwlock_unlock (RWLOCK rwlock, toku_mutex_t *mutex) {
 // Time the read lock that's in util/rwlock.h
 void time_util_rwlock (void) __attribute((__noinline__));
 void time_util_rwlock (void) {
-    struct rwlock rwlock;
+    struct st_rwlock rwlock;
     toku_mutex_t external_mutex;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&external_mutex, NULL);
-    rwlock_init(&rwlock);
+    toku_mutex_init(toku_uninstrumented,&external_mutex, NULL);
+    rwlock_init(toku_uninstrumented, &rwlock);
     struct timeval start,end;
     
     util_rwlock_lock(&rwlock, &external_mutex);
@@ -326,11 +326,11 @@ void time_util_rwlock (void) {
 // Time the read lock that's in util/rwlock.h, assuming the mutex is already held.
 void time_util_prelocked_rwlock (void) __attribute__((__noinline__));
 void time_util_prelocked_rwlock (void) {
-    struct rwlock rwlock;
+    struct st_rwlock rwlock;
     toku_mutex_t external_mutex;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&external_mutex, NULL);
+    toku_mutex_init(toku_uninstrumented,&external_mutex, NULL);
     toku_mutex_lock(&external_mutex);
-    rwlock_init(&rwlock);
+    rwlock_init(toku_uninstrumented, &rwlock);
     struct timeval start,end;
     
     rwlock_read_lock(&rwlock, &external_mutex);
@@ -355,7 +355,7 @@ void time_util_prelocked_rwlock (void) {
 void time_frwlock_prelocked(void) __attribute__((__noinline__));
 void time_frwlock_prelocked(void) {
     toku_mutex_t external_mutex;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&external_mutex, NULL);
+    toku_mutex_init(toku_uninstrumented,&external_mutex, NULL);
     struct timeval start,end;
     toku::frwlock x;
     x.init(&external_mutex);
@@ -392,7 +392,7 @@ void time_frwlock_prelocked(void) {
 void time_frwlock(void) __attribute__((__noinline__));
 void time_frwlock(void) {
     toku_mutex_t external_mutex;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&external_mutex, NULL);
+    toku_mutex_init(toku_uninstrumented,&external_mutex, NULL);
     struct timeval start,end;
     toku::frwlock x;
     x.init(&external_mutex);

@@ -153,13 +153,13 @@ static void test_with_threads(void) {
 
     struct consumer_extra extra = { .buf = &buf, .xorsum = 0 };
     toku_pthread_t consumer_thd;
-    int r = toku_pthread_create(&consumer_thd, nullptr, consumer, &extra);
+    int r = toku_pthread_create(toku_uninstrumented, &consumer_thd, nullptr, consumer, &extra);
     invariant_zero(r);
 
     const int nproducers = 10;
     toku_pthread_t producer_thds[nproducers];
     for (int i = 0; i < nproducers; ++i) {
-        r = toku_pthread_create(&producer_thds[i], nullptr, producer, &buf);
+        r = toku_pthread_create(toku_uninstrumented, &producer_thds[i], nullptr, producer, &buf);
         invariant_zero(r);
     }
 

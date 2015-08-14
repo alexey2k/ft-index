@@ -524,7 +524,7 @@ static int get_commit_flags(struct cli_args *args) {
 struct worker_extra {
     struct arg* thread_arg;
     toku_mutex_t *operation_lock_mutex;
-    struct rwlock *operation_lock;
+    struct st_rwlock *operation_lock;
     uint64_t *counters;
     int64_t pad[4]; // pad to 64 bytes
 };
@@ -1827,9 +1827,9 @@ static int run_workers(
     int r;
     const struct perf_formatter *perf_formatter = &perf_formatters[cli_args->perf_output_format];
     toku_mutex_t mutex = ZERO_MUTEX_INITIALIZER;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&mutex, nullptr);
-    struct rwlock rwlock;
-    rwlock_init(&rwlock);
+    toku_mutex_init(toku_uninstrumented,&mutex, nullptr);
+    struct st_rwlock rwlock;
+    rwlock_init(toku_uninstrumented, &rwlock);
     toku_pthread_t tids[num_threads];
     toku_pthread_t time_tid;
     if (cli_args->print_performance) {
@@ -1853,11 +1853,11 @@ static int run_workers(
         worker_extra[i].operation_lock_mutex = &mutex;
         XCALLOC_N((int) NUM_OPERATION_TYPES, worker_extra[i].counters);
         TOKU_DRD_IGNORE_VAR(worker_extra[i].counters);
-        { int chk_r = toku_pthread_create(&tids[i], nullptr, worker, &worker_extra[i]); CKERR(chk_r); }
+        { int chk_r = toku_pthread_create(toku_uninstrumented, &tids[i], nullptr, worker, &worker_extra[i]); CKERR(chk_r); }
         if (verbose)
             printf("%lu created\n", (unsigned long) tids[i]);
     }
-    { int chk_r = toku_pthread_create(&time_tid, nullptr, test_time, &tte); CKERR(chk_r); }
+    { int chk_r = toku_pthread_create(toku_uninstrumented, &time_tid, nullptr, test_time, &tte); CKERR(chk_r); }
     if (verbose)
         printf("%lu created\n", (unsigned long) time_tid);
 
@@ -1870,15 +1870,15 @@ static int run_workers(
         // threads (i.e. there is some runaway thread).
         struct sleep_and_crash_extra sac_extra;
         ZERO_STRUCT(sac_extra);
-        toku_mutex_init(PFS_NOT_INSTRUMENTED,&sac_extra.mutex, nullptr);
-        toku_cond_init(PFS_NOT_INSTRUMENTED,&sac_extra.cond, nullptr);
+        toku_mutex_init(toku_uninstrumented,&sac_extra.mutex, nullptr);
+        toku_cond_init(toku_uninstrumented,&sac_extra.cond, nullptr);
         sac_extra.seconds = cli_args->join_timeout;
         sac_extra.is_setup = false;
         sac_extra.threads_have_joined = false;
 
         toku_mutex_lock(&sac_extra.mutex);
         toku_pthread_t sac_thread;
-        r = toku_pthread_create(&sac_thread, nullptr, sleep_and_crash, &sac_extra);
+        r = toku_pthread_create(toku_uninstrumented, &sac_thread, nullptr, sleep_and_crash, &sac_extra);
         assert_zero(r);
         // Wait for sleep_and_crash thread to get set up, spinning is ok, this should be quick.
         while (!sac_extra.is_setup) {

@@ -93,7 +93,7 @@ PATENT RIGHTS GRANT:
 
 #include <toku_assert.h>
 #include <toku_portability.h>
-#include <toku_pfs.h>
+#include <toku_instrumentation.h>
 
 /* Readers/writers locks implementation
  *

@@ -15,13 +15,12 @@ struct TOKU_FILE
     /** The real file. */
     FILE *file;
     struct PSI_file * key;
+    TOKU_FILE() : file(nullptr), key(nullptr) {}
 };
 
 struct PSI_mutex;
 struct PSI_cond;
 struct PSI_rwlock;
-
-
 
 
 class toku_instr_key;
@@ -84,6 +83,7 @@ public:
 };
 
 #define TOKU_PROBE_START(p) p->start_with_source_location(__FILE__, __LINE__)
+#define TOKU_PROBE_STOP(p) p->stop
 
 extern toku_instr_key toku_uninstrumented;
 
@@ -118,6 +118,11 @@ int toku_pthread_create(UU(const toku_instr_key &key), pthread_t *thread,
                         void *(*start_routine)(void*), void *arg)
 {
     return pthread_create(thread, attr, start_routine, arg);
+}
+
+inline
+void toku_instr_register_current_thread()
+{
 }
 
 inline
@@ -352,6 +357,7 @@ extern toku_instr_key toku_uninstrumented;
 extern toku_instr_probe *toku_instr_probe_1;
 
 //threads
+extern toku_instr_key *toku_main_thread_key;
 extern toku_instr_key *extractor_thread_key;
 extern toku_instr_key *fractal_thread_key;
 extern toku_instr_key *io_thread_key;

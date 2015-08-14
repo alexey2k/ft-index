@@ -180,7 +180,7 @@ typedef unsigned int pfs_key_t;
 
 #define UU(x) x __attribute__((__unused__))
 
-#include "toku_pfs.h"
+#include "toku_instrumentation.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -325,9 +325,15 @@ size_t toku_os_fread (const void *ptr, size_t size, size_t nmemb, TOKU_FILE *str
 inline
 void toku_instr_mutex_unlock(PSI_mutex *mutex_instr);
 
-TOKU_FILE * toku_os_fdopen(int fildes, const char *mode);
-
 void toku_os_recursive_delete(const char *path);
+
+TOKU_FILE *
+toku_os_fdopen_with_source_location(int fildes, const char *mode,
+                                    const char *filename, 
+                                    const toku_instr_key &instr_key,
+                                    const char *src_file, uint src_line);
+#define toku_os_fdopen(FD, M, FN, K) \
+    toku_os_fdopen_with_source_location(FD, M, FN, K, __FILE__, __LINE__)
 
 TOKU_FILE * toku_os_fopen_with_source_location(const char *filename,
                                                const char *mode,
@@ -527,7 +533,10 @@ inline
 void toku_mutex_init(const toku_instr_key &key, toku_mutex_t *mutex,
                      const toku_pthread_mutexattr_t *attr)
 {
-    mutex->psi_mutex = toku_instr_mutex_init(key, *mutex);
+#if TOKU_PTHREAD_DEBUG
+    mutex->valid=true;
+#endif
+    toku_instr_mutex_init(key, *mutex);
     int r = pthread_mutex_init(&mutex->pmutex, attr);
     assert_zero(r);
 #if TOKU_PTHREAD_DEBUG

@@ -28,7 +28,7 @@ static void *t1_func(void *arg) {
 int main(void) {
     int r;
 
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&rwlock_mutex, NULL);
+    toku_mutex_init(toku_uninstrumented,&rwlock_mutex, NULL);
     rwlock.init(&rwlock_mutex);
     
     const int nthreads = 2;

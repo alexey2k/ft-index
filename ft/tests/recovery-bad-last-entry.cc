@@ -138,7 +138,7 @@ run_test(void) {
         char fname[TOKU_PATH_MAX+1];
         sprintf(fname, "%s/%s%d", TOKU_TEST_FILENAME, "log000000000000.tokulog", TOKU_LOG_VERSION);
 
-        r = toku_stat(fname, &st); assert(r==0);
+        r = toku_stat(fname, &st, toku_uninstrumented); assert(r==0);
         if ( st.st_size - trim > magic_begin_end_checkpoint_sz ) {
             r = truncate(fname, st.st_size - trim);
             CKERR(r);

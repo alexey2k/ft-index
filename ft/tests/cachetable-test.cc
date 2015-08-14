@@ -98,7 +98,7 @@ PATENT RIGHTS GRANT:
 toku_mutex_t  test_mutex;
 
 static inline void test_mutex_init(void) {
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&test_mutex, 0);
+    toku_mutex_init(toku_uninstrumented, &test_mutex, 0);
 }
 
 static inline void test_mutex_destroy(void) {

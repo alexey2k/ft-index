@@ -104,7 +104,7 @@ check_logmax (int max) {
 	    // It is a "log*" file
 	    char full_fname[TOKU_PATH_MAX+1];
 	    toku_struct_stat sbuf;
-	    int r = toku_stat(toku_path_join(full_fname, 2, TOKU_TEST_FILENAME, ent->d_name), &sbuf);
+	    int r = toku_stat(toku_path_join(full_fname, 2, TOKU_TEST_FILENAME, ent->d_name), &sbuf, toku_uninstrumented);
 	    assert(r==0);
 	    if (verbose)
 		printf("%s is of size %" PRId64 "\n", ent->d_name, (int64_t)sbuf.st_size);

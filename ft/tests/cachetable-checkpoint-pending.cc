@@ -213,8 +213,8 @@ static void checkpoint_pending(void) {
     n_flush = n_write_me = n_keep_me = n_fetch = 0; expect_value = 42;
     //printf("E42\n");
     toku_pthread_t checkpoint_thread, update_thread;
-    r = toku_pthread_create(&checkpoint_thread, NULL, do_checkpoint, NULL);  assert(r==0);
-    r = toku_pthread_create(&update_thread,     NULL, do_update,     NULL);  assert(r==0);
+    r = toku_pthread_create(toku_uninstrumented, &checkpoint_thread, NULL, do_checkpoint, NULL);  assert(r==0);
+    r = toku_pthread_create(toku_uninstrumented, &update_thread,     NULL, do_update,     NULL);  assert(r==0);
     r = toku_pthread_join(checkpoint_thread, 0);                             assert(r==0);
     r = toku_pthread_join(update_thread, 0);                                 assert(r==0);
     

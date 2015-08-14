@@ -259,7 +259,7 @@ test_main (int argc, const char *argv[]) {
 
     unsigned int i;
     for (i=0; i<N; i++) {
-        int r=toku_pthread_create(tests+i, 0, testfuns[i], 0);
+        int r=toku_pthread_create(toku_uninstrumented, tests+i, 0, testfuns[i], 0);
         assert(r==0);
     }
     for (i=0; i<N; i++) {

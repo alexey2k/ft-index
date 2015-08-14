@@ -150,7 +150,7 @@ static void simple_lockwait(DB_ENV *db_env, DB *db, int do_txn, int nrows, int n
     for (int i = 1 ; i < ntxns; i++) {
         struct insert_one_arg *XMALLOC(arg);
         *arg = (struct insert_one_arg) { txns[i], db};
-        r = toku_pthread_create(&tids[i], NULL, insert_one, arg);
+        r = toku_pthread_create(toku_uninstrumented, &tids[i], NULL, insert_one, arg);
     }
 
     sleep(10);

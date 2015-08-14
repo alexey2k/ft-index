@@ -355,8 +355,8 @@ static void test_indexer(DB *src, DB **dbs)
     toku_mutex_unlock(&put_lock);
 
     // start threads doing additional inserts - no lock issues since indexer already created
-    r = toku_pthread_create(&client_threads[0], 0, client, (void *)&client_specs[0]);  CKERR(r);
-//    r = toku_pthread_create(&client_threads[1], 0, client, (void *)&client_specs[1]);  CKERR(r);
+    r = toku_pthread_create(toku_uninstrumented, &client_threads[0], 0, client, (void *)&client_specs[0]);  CKERR(r);
+//    r = toku_pthread_create(toku_uninstrumented, &client_threads[1], 0, client, (void *)&client_specs[1]);  CKERR(r);
 
     struct timeval start, now;
     if ( verbose ) {
@@ -398,7 +398,7 @@ static void test_indexer(DB *src, DB **dbs)
 static void run_test(void) 
 {
     int r;
-    toku_mutex_init(PFS_NOT_INSTRUMENTED,&put_lock, NULL);
+    toku_mutex_init(toku_uninstrumented,&put_lock, NULL);
     toku_os_recursive_delete(TOKU_TEST_FILENAME);
     r = toku_os_mkdir(TOKU_TEST_FILENAME, S_IRWXU+S_IRWXG+S_IRWXO);                          CKERR(r);
     char logname[TOKU_PATH_MAX+1];

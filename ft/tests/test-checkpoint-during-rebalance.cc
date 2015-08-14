@@ -155,7 +155,7 @@ static void flusher_callback(int state, void* extra) {
     }
     if (state == desired_state) {
         checkpoint_called = true;
-        int r = toku_pthread_create(&checkpoint_tid, NULL, do_checkpoint, NULL); 
+        int r = toku_pthread_create(toku_uninstrumented, &checkpoint_tid, NULL, do_checkpoint, NULL); 
         assert_zero(r);
         while (!checkpoint_callback_called) {
             usleep(1*1024*1024);

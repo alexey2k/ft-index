@@ -194,7 +194,7 @@ int test_main(int argc, char * const argv[]) {
     toku_pthread_t tids[nthreads];
     struct blocking_range_lock_args a = { db_env, db, nrows, sleeptime };
     for (int i = 0; i < nthreads-1; i++) {
-        r = toku_pthread_create(&tids[i], NULL, blocking_range_lock_thread, &a); assert(r == 0);
+        r = toku_pthread_create(toku_uninstrumented, &tids[i], NULL, blocking_range_lock_thread, &a); assert(r == 0);
     }
     blocking_range_lock(db_env, db, nrows, sleeptime);
     for (int i = 0; i < nthreads-1; i++) {

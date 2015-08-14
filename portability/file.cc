@@ -105,7 +105,7 @@ PATENT RIGHTS GRANT:
 #include <portability/toku_atomic.h>
 
 
-#include <toku_pfs.h>
+#include <toku_instrumentation.h>
 
 toku_instr_key *tokudb_file_data_key;
 
@@ -426,9 +426,8 @@ toku_os_fwrite_with_source_location (const void *ptr, size_t size, size_t nmemb,
           result= get_maybe_error_errno();        // ... then there is no error in the stream, but there is one in errno
         else
           result= ferror(stream->file);
+        invariant(result != 0);  //Should we assert here?
     }
-    invariant(result != 0);
-    
     /* Regsiter the result value with the instrumentaion system */
     toku_instr_file_io_end(io_annotation, bytes_written);
 
@@ -452,27 +451,31 @@ toku_os_fread_with_source_location(void *ptr, size_t size, size_t nmemb, TOKU_FI
           result= EOF;
         else
           result= ferror(stream->file);
+        invariant(result != 0);  //Should we assert here?
     }  
-    invariant(result != 0);
-    
     /* Regsiter the result value with the instrumentaion system */
     toku_instr_file_io_end(io_annotation, bytes_read);
 
     return result;
 }
 
-
 TOKU_FILE *
-toku_os_fdopen(int fildes, const char *mode)
+toku_os_fdopen_with_source_location(int fildes, const char *mode,
+                                    const char *filename, 
+                                    const toku_instr_key &instr_key,
+                                    const char *src_file, uint src_line)
 {
-    //TOKU_FILE * rval;
     TOKU_FILE *XMALLOC(rval);
     if (toku_likely(rval != NULL))
     {
-      if (t_fdopen)
-	rval->file = t_fdopen(fildes, mode);
-      else 
-	rval->file = fdopen(fildes, mode);
+      toku_io_instrumentation io_annotation;
+      toku_instr_file_open_begin(io_annotation, instr_key,
+                                 toku_instr_file_op::file_stream_open,
+                                 filename, src_file, src_line);
+
+      rval->file = (t_fdopen) ? t_fdopen(fildes, mode) : fdopen(fildes, mode);
+      toku_instr_file_stream_open_end(io_annotation, *rval);
+
       if (toku_unlikely(rval->file == NULL))
       {
         toku_free(rval);
@@ -499,6 +502,7 @@ toku_os_fopen_with_source_location(const char *filename, const char *mode,
     rval->file = t_fopen ? t_fopen(filename, mode) : fopen(filename, mode);
     /* Register the returning "file" value with the system */
     toku_instr_file_stream_open_end(io_annotation, *rval);
+
     if (toku_unlikely(rval->file == NULL))
     {
       toku_free(rval);
@@ -576,7 +580,8 @@ toku_os_fclose_with_source_location(TOKU_FILE * stream,
         }
         /* Regsiter the returning "rval" value with the system */
         toku_instr_file_close_end(io_annotation, rval);
-        toku_free(stream->file);
+        toku_free(stream);
+        stream=nullptr;
     }
     return rval;
 }

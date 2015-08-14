@@ -129,7 +129,7 @@ PATENT RIGHTS GRANT:
 #include "toku_time.h"
 #include "memory.h"
 
-#include "toku_pfs.h"
+#include "toku_instrumentation.h"
 
 #include <portability/toku_atomic.h>
 #include <util/partitioned_counter.h>

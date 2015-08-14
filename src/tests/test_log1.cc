@@ -140,7 +140,7 @@ static void make_db (bool close_env) {
     {
 	toku_struct_stat statbuf;
         char fullfile[TOKU_PATH_MAX+1];
-	r = toku_stat(toku_path_join(fullfile, 2, TOKU_TEST_FILENAME, filename), &statbuf);
+	r = toku_stat(toku_path_join(fullfile, 2, TOKU_TEST_FILENAME, filename), &statbuf, toku_uninstrumented);
 	assert(r==0);
         toku_free(filename);
     }

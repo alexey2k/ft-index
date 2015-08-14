@@ -133,7 +133,7 @@ cachetable_test (void) {
       NULL
       );
   toku_pthread_t pin_nonblocking_tid;
-  r = toku_pthread_create(&pin_nonblocking_tid, NULL, pin_nonblocking, NULL); 
+  r = toku_pthread_create(toku_uninstrumented, &pin_nonblocking_tid, NULL, pin_nonblocking, NULL); 
   assert_zero(r);    
   // sleep 3 seconds
   usleep(3*1024*1024);

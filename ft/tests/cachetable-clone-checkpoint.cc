@@ -168,7 +168,7 @@ cachetable_test (void) {
     clone_flush_started = false;
     clone_flush_completed = false;
     toku_pthread_t checkpoint_tid;
-    r = toku_pthread_create(&checkpoint_tid, NULL, run_end_checkpoint, NULL); 
+    r = toku_pthread_create(toku_uninstrumented, &checkpoint_tid, NULL, run_end_checkpoint, NULL); 
     assert_zero(r);    
 
     usleep(1*1024*1024);

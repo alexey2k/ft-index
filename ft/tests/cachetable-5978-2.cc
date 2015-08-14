@@ -169,6 +169,7 @@ unpin_two (void* UU(v)) {
     // at this point, we have p1 pinned, want to start a thread to do an unpin_and_remove
     // on p1    
     r = toku_pthread_create(
+        toku_uninstrumented, 
         &unpin_and_remove_tid, 
         NULL, 
         unpin_and_remove_one, 
@@ -227,7 +228,7 @@ cachetable_test (void) {
 
 
     toku_pthread_t tid1;
-    r = toku_pthread_create(&tid1, NULL, repin_one, NULL); 
+    r = toku_pthread_create(toku_uninstrumented, &tid1, NULL, repin_one, NULL); 
     assert_zero(r);
 
     void *ret;

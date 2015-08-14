@@ -154,8 +154,8 @@ static void run_test(void) {
     toku_pthread_t chkpt2_tid;
 
     
-    { int chk_r = toku_pthread_create(&chkpt1_tid, NULL, run_checkpoint, NULL); CKERR(chk_r); } 
-    { int chk_r = toku_pthread_create(&chkpt2_tid, NULL, run_checkpoint, NULL); CKERR(chk_r); } 
+    { int chk_r = toku_pthread_create(toku_uninstrumented, &chkpt1_tid, NULL, run_checkpoint, NULL); CKERR(chk_r); } 
+    { int chk_r = toku_pthread_create(toku_uninstrumented, &chkpt2_tid, NULL, run_checkpoint, NULL); CKERR(chk_r); } 
     usleep(2*1024*1024);
     struct timeval tstart;
     gettimeofday(&tstart, NULL);

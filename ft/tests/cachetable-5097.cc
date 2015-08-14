@@ -201,7 +201,7 @@ cachetable_test (void) {
     // at this point, we have a dirty PAIR in the cachetable associated with cachefile f1
     // launch a thread that will put another PAIR in the cachetable, and get partial eviction started
     toku_pthread_t tid;
-    r = toku_pthread_create(&tid, NULL, f2_pin, NULL); 
+    r = toku_pthread_create(toku_uninstrumented, &tid, NULL, f2_pin, NULL); 
     assert_zero(r);
 
     usleep(2*1024*1024);

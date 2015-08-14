@@ -244,14 +244,14 @@ static void run_test(uint64_t max_i, int n_small) {
         env, big_db, max_i, big_test,
     };
     toku_pthread_t big_id;
-    r = toku_pthread_create(&big_id, NULL, test_f, &big_test_args);
+    r = toku_pthread_create(toku_uninstrumented, &big_id, NULL, test_f, &big_test_args);
     assert(r == 0);
 
     struct test_args small_test_args[n_small];
     toku_pthread_t small_id[n_small];
     for (int i = 0; i < n_small; i++) {
         small_test_args[i] = { env, small_db, max_i, small_test };
-        r = toku_pthread_create(&small_id[i], NULL, test_f, &small_test_args[i]);
+        r = toku_pthread_create(toku_uninstrumented, &small_id[i], NULL, test_f, &small_test_args[i]);
         assert(r == 0);
     }
     
